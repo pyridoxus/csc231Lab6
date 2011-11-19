@@ -34,6 +34,14 @@ float farClip = 10000.0;
 // Initial light position
 GLfloat light_position[] = { 5.0, 5.0, 5.0, 0.0 };
 
+// Ambient light
+GLfloat ambient[] = { 0.05, 0.05, 0.05, 1.0 };
+
+// Specify material properties
+GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat shininess[] = { 20.0 };
+
 // Callback functions
 void myDraw();
 void keyboard( unsigned char, int, int );
@@ -67,6 +75,7 @@ int main( int argc, char **argv )
   glShadeModel(GL_SMOOTH);
 
 	// Define light
+  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Enable lighting model
@@ -87,10 +96,6 @@ int main( int argc, char **argv )
 // Display callback
 void myDraw()
 {
-	// Specify material properties
-	float diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-  float specular[] = { 1.0, 1.0, 1.0, 1.0 };
-  float shininess[] = { 20.0 };
   // Clear
   glClearColor( 0.0, 0.0, 0.0, 1.0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
