@@ -34,13 +34,20 @@ float farClip = 10000.0;
 // Initial light position
 GLfloat light_position[] = { 5.0, 5.0, 5.0, 0.0 };
 
-// Ambient light
-GLfloat ambient[] = { 0.05, 0.05, 0.05, 1.0 };
+// Light diffuse
+GLfloat light_diffuse[] = { 0.7, 0.7, 0.2, 1.0 };
+
+// Light object properties
+// Other properties are the same as light_diffuse
+GLfloat ob_diffuse[] = { 0.7, 0.7, 0.2, 1.0 };
+GLfloat ob_specular[] = { 0.0, 0.0, 0.0, 1.0 };
+GLfloat ob_ambient[] = { 7.0, 7.0, 2.0, 1.0 };
 
 // Specify material properties
+GLfloat ambient[] = { 0.05, 0.05, 0.05, 1.0 };
 GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat shininess[] = { 20.0 };
+GLfloat shininess[] = { 100.0 };
 
 // Callback functions
 void myDraw();
@@ -75,9 +82,8 @@ int main( int argc, char **argv )
   glShadeModel(GL_SMOOTH);
 
 	// Define light
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
   // Enable lighting model
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
@@ -105,19 +111,19 @@ void myDraw()
   glTranslatef( light_position[0], light_position[1], light_position[2] );
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	// Draw light
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
+  glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient);
   if(glIsEnabled(GL_LIGHT0))
-  {
-//    glMaterialfv(GL_FRONT, GL_DIFFUSE, this->data.diffuse);
     glutSolidSphere( 0.5, 10, 10 );
-  }
   else
 		glutWireSphere(1.0, 10, 10);
   glPopMatrix();
   glPushMatrix();
-//  glTranslatef( 0.0, 0.0, 0.0 );
   glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   // Draw object
   glutSolidSphere( 3.0, 100, 100 );
 
