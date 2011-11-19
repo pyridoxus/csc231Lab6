@@ -37,7 +37,7 @@ void arrow( int, int, int );
 void menu( int );
 void mousePress( int, int, int, int );
 
-void main( int argc, char **argv )
+int main( int argc, char **argv )
 {
   // Initialize window system
   glutInit( &argc, argv );
@@ -60,10 +60,15 @@ void main( int argc, char **argv )
   glEnable( GL_DEPTH_TEST );
 
 	// Specify shading model
+  glShadeModel(GL_SMOOTH);
 
 	// Define light
+  GLfloat light_position[] = { 0.0, 1.0, 1.0, 0.0 };
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Enable lighting model
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 
   // Callbacks
   glutDisplayFunc( myDraw );
@@ -73,6 +78,7 @@ void main( int argc, char **argv )
 
   // Main loop
   glutMainLoop();
+  return 0;
 }
 
 // Display callback
