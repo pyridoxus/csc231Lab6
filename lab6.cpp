@@ -146,9 +146,6 @@ void arrow( int key, int x, int y )
 		case GLUT_KEY_PAGE_DOWN:// translate along +z axis
 			light_position[2]++;
 		break;
-		case 'q':
-			exit(1);
-		break;
 	}
 	// Redraw the scene
   glutPostRedisplay();
@@ -158,7 +155,12 @@ void arrow( int key, int x, int y )
 void keyboard( unsigned char key, int x, int y )
 {
   // Process entries
-
+	switch(key)
+	{
+		case 'q':
+			exit(1);
+		break;
+	}
   // Redraw the scene
   glutPostRedisplay();
 }
