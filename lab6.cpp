@@ -30,6 +30,9 @@ float aspect = 1.333;
 float nearClip = 0.01;
 float farClip = 10000.0;
 
+// Initial light position
+GLfloat light_position[] = { 5.0, 5.0, 5.0, 0.0 };
+
 // Callback functions
 void myDraw();
 void keyboard( unsigned char, int, int );
@@ -43,7 +46,7 @@ int main( int argc, char **argv )
   glutInit( &argc, argv );
   glutInitDisplayMode( GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH );
   glutInitWindowSize( 640, 480 );
-  glutCreateWindow( "Lab 7" );
+  glutCreateWindow( "Lab 6" );
 
   // Background color
   glClearColor( 0.0, 0.0, 0.0, 1.0 );
@@ -63,7 +66,6 @@ int main( int argc, char **argv )
   glShadeModel(GL_SMOOTH);
 
 	// Define light
-  GLfloat light_position[] = { 0.0, 1.0, 1.0, 0.0 };
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
   // Enable lighting model
@@ -85,17 +87,35 @@ int main( int argc, char **argv )
 void myDraw()
 {
 	// Specify material properties
-
+	float diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+  float specular[] = { 1.0, 1.0, 1.0, 1.0 };
+  float shininess[] = { 20.0 };
   // Clear
   glClearColor( 0.0, 0.0, 0.0, 1.0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+
+  glPushMatrix();
+  glTranslatef( light_position[0], light_position[1], light_position[2] );
 	// Draw light
-
-
+  if(glIsEnabled(GL_LIGHT0))
+  {
+//    glMaterialfv(GL_FRONT, GL_DIFFUSE, this->data.diffuse);
+    glutSolidSphere( 0.5, 10, 10 );
+  }
+  else
+		glutWireSphere(1.0, 10, 10);
+  glPopMatrix();
+  glPushMatrix();
+  glTranslatef( 0.0, 0.0, 0.0 );
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
   // Draw object
+  glutSolidSphere( 3.0, 100, 100 );
 
 
+  glPopMatrix();
   // Swap buffers
   glutSwapBuffers();
 }
