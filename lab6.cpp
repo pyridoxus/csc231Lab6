@@ -24,6 +24,7 @@ Provide documentation describing your keyboard controls.
 #include <iostream>
 using namespace std;
 #include <GL/glut.h>
+#include <stdlib.h>
 
 float fov = 45.0;
 float aspect = 1.333;
@@ -97,6 +98,7 @@ void myDraw()
 
   glPushMatrix();
   glTranslatef( light_position[0], light_position[1], light_position[2] );
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	// Draw light
   if(glIsEnabled(GL_LIGHT0))
   {
@@ -107,7 +109,7 @@ void myDraw()
 		glutWireSphere(1.0, 10, 10);
   glPopMatrix();
   glPushMatrix();
-  glTranslatef( 0.0, 0.0, 0.0 );
+//  glTranslatef( 0.0, 0.0, 0.0 );
   glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
@@ -124,7 +126,30 @@ void myDraw()
 void arrow( int key, int x, int y )
 {
   // Process entries
-
+	switch(key)
+	{
+		case GLUT_KEY_LEFT:			// translate along -x axis
+			light_position[0]--;
+		break;
+		case GLUT_KEY_RIGHT:		// translate along +x axis
+			light_position[0]++;
+		break;
+		case GLUT_KEY_DOWN:			// translate along -y axis
+			light_position[1]--;
+		break;
+		case GLUT_KEY_UP:			  // translate along +y axis
+			light_position[1]++;
+		break;
+		case GLUT_KEY_PAGE_UP:  // translate along -z axis
+			light_position[2]--;
+		break;
+		case GLUT_KEY_PAGE_DOWN:// translate along +z axis
+			light_position[2]++;
+		break;
+		case 'q':
+			exit(1);
+		break;
+	}
 	// Redraw the scene
   glutPostRedisplay();
 }
