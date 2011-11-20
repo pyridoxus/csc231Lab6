@@ -128,6 +128,7 @@ void myDraw()
 		glutWireSphere(1.0, 10, 10);
   glPopMatrix();
   glPushMatrix();
+  glLoadName( SPHERE );      // Load picking id
   glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
@@ -135,10 +136,10 @@ void myDraw()
   // Draw object
   glutSolidSphere( 3.0, 100, 100 );
 
-
   glPopMatrix();
   // Swap buffers
   glutSwapBuffers();
+  return;
 }
 
 // Arrow keys callback
@@ -168,6 +169,7 @@ void arrow( int key, int x, int y )
 	}
 	// Redraw the scene
   glutPostRedisplay();
+  return;
 }
 
 // Keyboard callback
@@ -182,13 +184,14 @@ void keyboard( unsigned char key, int x, int y )
 	}
   // Redraw the scene
   glutPostRedisplay();
+  return;
 }
 
 // Mouse press callback
 void mousePress( int button, int state, int x, int y )
 {
-	if((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN))
-		clickableScene(x, y);
+	if((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN)) clickableScene(x, y);
+  return;
 }
 
 void clickableScene(int x, int y)
