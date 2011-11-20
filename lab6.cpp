@@ -37,17 +37,19 @@ float farClip = 10000.0;
 // Initial light position
 GLfloat light_position[] = { 5.0, 5.0, 5.0, 0.0 };
 
-// Light diffuse
+// Light properties
 GLfloat light_diffuse[] = { 0.7, 0.7, 0.2, 1.0 };
+GLfloat light_ambient[] = { 0.05, 0.05, 0.05, 1.0 };
 
 // Light object properties
-// Other properties are the same as light_diffuse
-GLfloat ob_diffuse[] = { 0.7, 0.7, 0.2, 1.0 };
+GLfloat ob_diffuse_on[] = { 0.7, 0.7, 0.2, 1.0 };
+GLfloat ob_diffuse_off[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat ob_specular[] = { 0.0, 0.0, 0.0, 1.0 };
-GLfloat ob_ambient[] = { 7.0, 7.0, 2.0, 1.0 };
+GLfloat ob_ambient_on[] = { 7.0, 7.0, 2.0, 1.0 };
+GLfloat ob_ambient_off[] = { 7.0, 7.0, 7.0, 1.0 };
 
 // Specify material properties
-GLfloat ambient[] = { 0.05, 0.05, 0.05, 1.0 };
+GLfloat ambient[] = { 0.2, 0.2, 0.2, 1.0 };
 GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat shininess[] = { 100.0 };
@@ -92,6 +94,7 @@ int main( int argc, char **argv )
 	// Define light
   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
   // Enable lighting model
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
@@ -119,13 +122,20 @@ void myDraw()
   glTranslatef( light_position[0], light_position[1], light_position[2] );
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	// Draw light
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
-  glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient);
   if(glIsEnabled(GL_LIGHT0))
+  {
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse_on);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient_on);
     glutSolidSphere( 0.5, 10, 10 );
+  }
   else
-		glutWireSphere(1.0, 10, 10);
+  {
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, ob_diffuse_off);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, ob_specular);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ob_ambient_off);
+		glutWireSphere(0.5, 10, 10);
+  }
   glPopMatrix();
   glPushMatrix();
   glLoadName( SPHERE );      // Load picking id
@@ -253,22 +263,19 @@ void clickableScene(int x, int y)
 		 names = *ptr;
 		 ptr++;
 // Remaining items - hit records
-		 printf (" names picked:\n");
 		 for (j = 0; j < names; j++)
 		 {
 				if( ptr[2] == LIGHT )
 				{
-						 printf( "   Light\n" );
-						 lightPicked = 1;
+				  if(glIsEnabled(GL_LIGHT0))
+					  glDisable(GL_LIGHT0);
+				  else
+					  glEnable(GL_LIGHT0);
+				  lightPicked = 1;
 				}
-				if( ptr[2] == SPHERE )
-				{
-						 printf( "   Sphere\n" );
-						 spherePicked = 1;
-				}
+				if( ptr[2] == SPHERE ) spherePicked = 1;
 				ptr += 3;
 		 }
-		 printf ("\n");
 	}
 	// Redisplay
 	glutPostRedisplay();
