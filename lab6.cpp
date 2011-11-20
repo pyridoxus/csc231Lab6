@@ -246,35 +246,27 @@ void clickableScene(int x, int y)
 
 	// Process hits
 	lightPicked = 0;
-	spherePicked = 0;
-	printf( "Total number of hits: %d\n", hits );
 	ptr = (GLuint *)selectBuffer;
 	for (i = 0; i < hits; i++)
 	{
 		 // First item - number of names of stack during hit
 		 names = *ptr;
-		 printf(" number of names for this hit = %d\n", *ptr);
 		 ptr++;
-
-		 // Next 2 items - min and max z values of object hit
-		 printf(" zMin is %u;", *ptr); ptr++;
-		 printf(" zMax is %u\n", *ptr); ptr++;
-
 // Remaining items - hit records
 		 printf (" names picked:\n");
 		 for (j = 0; j < names; j++)
 		 {
-				if( *ptr == LIGHT )
+				if( ptr[2] == LIGHT )
 				{
 						 printf( "   Light\n" );
 						 lightPicked = 1;
 				}
-				if( *ptr == SPHERE )
+				if( ptr[2] == SPHERE )
 				{
 						 printf( "   Sphere\n" );
 						 spherePicked = 1;
 				}
-				ptr++;
+				ptr += 3;
 		 }
 		 printf ("\n");
 	}
