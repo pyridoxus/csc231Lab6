@@ -25,6 +25,9 @@ Provide documentation describing your keyboard controls.
 using namespace std;
 #include <GL/glut.h>
 #include <stdlib.h>
+#define LIGHT 1
+#define SPHERE 2
+#define SELECT_BUFSIZE  10
 
 float fov = 45.0;
 float aspect = 1.333;
@@ -48,6 +51,10 @@ GLfloat ambient[] = { 0.05, 0.05, 0.05, 1.0 };
 GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat shininess[] = { 100.0 };
+
+// Selection data
+int lightPicked = 0;
+int spherePicked = 0;	// Just for fun and debugging
 
 // Callback functions
 void myDraw();
@@ -106,8 +113,8 @@ void myDraw()
   glClearColor( 0.0, 0.0, 0.0, 1.0);
   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-
   glPushMatrix();
+  glLoadName( LIGHT );      // Load picking id
   glTranslatef( light_position[0], light_position[1], light_position[2] );
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	// Draw light
