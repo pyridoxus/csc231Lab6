@@ -65,6 +65,20 @@ void arrow( int, int, int );
 void menu( int );
 void mousePress( int, int, int, int );
 void clickableScene(int x, int y);
+void showInstructions(void);
+
+void showInstructions(void)
+{
+	cout << "To move the light, follow these instructions:" << endl;
+	cout << "Left Arrow:  translate along -x axis" << endl;
+	cout << "Right Arrow: translate along +x axis" << endl;
+	cout << "Down Arrow:  translate along -y axis" << endl;
+	cout << "Up Arrow:    translate along +y axis" << endl;
+	cout << "Page Up:     translate along -z axis" << endl;
+	cout << "Page Down:   translate along +z axis" << endl;
+	cout << "q:           quit program" << endl;
+	return;
+}
 
 int main( int argc, char **argv )
 {
@@ -105,6 +119,7 @@ int main( int argc, char **argv )
 	glutSpecialFunc( arrow );
   glutMouseFunc( mousePress );
 
+  showInstructions();
   // Main loop
   glutMainLoop();
   return 0;
