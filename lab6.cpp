@@ -187,6 +187,91 @@ void keyboard( unsigned char key, int x, int y )
 void mousePress( int button, int state, int x, int y )
 {
   // Pick objects if left button down
+	  GLuint selectBuffer[ SELECT_BUFSIZE ];     // selections
+	  GLuint *ptr, names;
+	  int hits, i;
+	  unsigned int j;
 
+	  // Viewport information
+	  GLint viewport[4];
+	  glGetIntegerv( GL_VIEWPORT, viewport );
+
+	  // Selection mode
+	  glSelectBuffer( SELECT_BUFSIZE, selectBuffer );
+	  glRenderMode( GL_SELECT );
+
+	  // Initialize name stack
+	  glInitNames();
+	  glPushName(-1);
+
+	  // Save transformation matrix
+	  glMatrixMode( GL_MODELVIEW );
+	  glPushMatrix();
+
+	  // Save original projection (viewing volume)
+	  glMatrixMode( GL_PROJECTION );
+	  glPushMatrix();
+
+	  // New picking viewing volume (area == 5 pixels)
+	  glLoadIdentity();
+	  gluPickMatrix ( GLdouble( x ),
+	                  GLdouble( viewport[3] - y ),
+	                  5.0, 5.0, viewport);
+	  gluPerspective( fov, aspect, nearClip, farClip );
+
+	  // Draw scene
+	  myDraw();
+
+	  // Restore original projection (viewing volume)
+	  glMatrixMode( GL_PROJECTION );
+	  glPopMatrix();
+
+	  // Restore original modelview matrix
+	  glMatrixMode( GL_MODELVIEW );
+	  glPopMatrix();
+
+	  // Swap buffers
+	  glutSwapBuffers();
+
+	  // End select mode
+	  hits = glRenderMode( GL_RENDER );
+
+	  // Process hits
+	  lightPicked = 0;
+	  spherePicked = 0;
+	  printf( "Total number of hits: %d\n", hits );
+	  ptr = (GLuint *)selectBuffer;
+	  for (i = 0; i < hits; i++)
+	  {
+	       // First item - number of names of stack during hit
+	       names = *ptr;
+	       printf(" number of names for this hit = %d\n", *ptr);
+	       ptr++;
+
+	       // Next 2 items - min and max z values of object hit
+	       printf(" zMin is %u;", *ptr); ptr++;
+	       printf(" zMax is %u\n", *ptr); ptr++;
+
+	 // Remaining items - hit records
+	       printf (" names picked:\n");
+	       for (j = 0; j < names; j++)
+	       {
+	          if( *ptr == LIGHT )
+	          {
+	               printf( "   Light\n" );
+	               lightPicked = 1;
+	          }
+	          if( *ptr == SPHERE )
+	          {
+	               printf( "   Sphere\n" );
+	               spherePicked = 1;
+	          }
+	          ptr++;
+	       }
+	       printf ("\n");
+	  }
+	  // Redisplay
+	  glutPostRedisplay();
+	  return;
 }
 
